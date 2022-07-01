@@ -31,41 +31,41 @@ type Request interface {
 
 type FunctionResponse struct {
 	// Body the body will be written back
-	body []byte
+	Body []byte
 
 	// StatusCode needs to be populated with value such as http.StatusOK
-	statusCode int
+	StatusCode int
 
 	// Header is optional and contains any additional headers the function response should set
-	header http.Header
+	Header http.Header
 }
 
 func NewFunctionResponse(body []byte, statusCode int, header http.Header) *FunctionResponse {
 	return &FunctionResponse{
-		body:       body,
-		statusCode: statusCode,
-		header:     header,
+		Body:       body,
+		StatusCode: statusCode,
+		Header:     header,
 	}
 }
 
 func (r *FunctionResponse) GetHeader() http.Header {
-	return r.header
+	return r.Header
 }
 
 func (r *FunctionResponse) GetBody() []byte {
-	return r.body
+	return r.Body
 }
 
 func (r *FunctionResponse) GetStatusCode() int {
-	return r.statusCode
+	return r.StatusCode
 }
 
 type FunctionRequest struct {
-	body        []byte
-	header      http.Header
-	queryString string
-	method      string
-	host        string
+	Body        []byte
+	Header      http.Header
+	QueryString string
+	Method      string
+	Host        string
 	ctx         context.Context
 }
 
@@ -82,33 +82,33 @@ func NewFunctionRequest(r *http.Request) *FunctionRequest {
 	}
 
 	return &FunctionRequest{
-		body:        body,
-		header:      r.Header,
-		queryString: r.URL.RawQuery,
-		method:      r.Method,
-		host:        r.Host,
+		Body:        body,
+		Header:      r.Header,
+		QueryString: r.URL.RawQuery,
+		Method:      r.Method,
+		Host:        r.Host,
 		ctx:         r.Context(),
 	}
 }
 
 func (req *FunctionRequest) GetHeader() http.Header {
-	return req.header
+	return req.Header
 }
 
 func (req *FunctionRequest) GetBody() []byte {
-	return req.body
+	return req.Body
 }
 
 func (req *FunctionRequest) GetQueryString() string {
-	return req.queryString
+	return req.QueryString
 }
 
 func (req *FunctionRequest) GetMethod() string {
-	return req.method
+	return req.Method
 }
 
 func (req *FunctionRequest) GetHost() string {
-	return req.host
+	return req.Host
 }
 
 // Context is set for optional cancellation inflight requests.
