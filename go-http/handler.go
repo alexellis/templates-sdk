@@ -5,6 +5,8 @@ package handler
 
 import (
 	"context"
+	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -40,6 +42,14 @@ type FunctionResponse struct {
 	header http.Header
 }
 
+func NewFunctionResponse(body []byte, statusCode int, header http.Header) *FunctionResponse {
+	return &FunctionResponse{
+		body:       body,
+		statusCode: statusCode,
+		header:     header,
+	}
+}
+
 func (r *FunctionResponse) GetHeader() http.Header {
 	return r.header
 }
@@ -59,6 +69,28 @@ type FunctionRequest struct {
 	method      string
 	host        string
 	ctx         context.Context
+}
+
+func NewFunctionRequest(r *http.Request) *FunctionRequest {
+
+	var body []byte
+	if r.Body != nil {
+		defer r.Body.Close()
+		var err error
+		body, err = ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Printf("Error reading body: %s", err)
+		}
+	}
+
+	return &FunctionRequest{
+		body:        body,
+		header:      r.Header,
+		queryString: r.URL.RawQuery,
+		method:      r.Method,
+		host:        r.Host,
+		ctx:         r.Context(),
+	}
 }
 
 func (req *FunctionRequest) GetHeader() http.Header {
