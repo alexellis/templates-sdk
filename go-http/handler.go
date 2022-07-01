@@ -28,7 +28,7 @@ type Request interface {
 	GetQueryString() string
 	GetMethod() string
 	GetHost() string
-	Context() context.Context
+	GetContext() context.Context
 }
 
 type FunctionResponse struct {
