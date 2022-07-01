@@ -23,8 +23,6 @@ type Request interface {
 
 	GetBody() []byte
 
-	GetStatusCode() int
-
 	GetQueryString() string
 	GetMethod() string
 	GetHost() string
