@@ -8,48 +8,98 @@ import (
 	"net/http"
 )
 
-// Response of function call
-type Response struct {
+type Response interface {
+	GetHeader() http.Header
 
-	// Body the body will be written back
-	Body []byte
+	GetBody() []byte
 
-	// StatusCode needs to be populated with value such as http.StatusOK
-	StatusCode int
-
-	// Header is optional and contains any additional headers the function response should set
-	Header http.Header
+	GetStatusCode() int
 }
 
-// Request of function call
-type Request struct {
-	Body        []byte
-	Header      http.Header
-	QueryString string
-	Method      string
-	Host        string
+type Request interface {
+	GetHeader() http.Header
+
+	GetBody() []byte
+
+	GetStatusCode() int
+
+	GetQueryString() string
+	GetMethod() string
+	GetHost() string
+	Context() context.Context
+}
+
+type FunctionResponse struct {
+	// Body the body will be written back
+	body []byte
+
+	// StatusCode needs to be populated with value such as http.StatusOK
+	statusCode int
+
+	// Header is optional and contains any additional headers the function response should set
+	header http.Header
+}
+
+func (r *FunctionResponse) GetHeader() http.Header {
+	return r.header
+}
+
+func (r *FunctionResponse) GetBody() []byte {
+	return r.body
+}
+
+func (r *FunctionResponse) GetStatusCode() int {
+	return r.statusCode
+}
+
+type FunctionRequest struct {
+	body        []byte
+	header      http.Header
+	queryString string
+	method      string
+	host        string
 	ctx         context.Context
 }
 
+func (req *FunctionRequest) GetHeader() http.Header {
+	return req.header
+}
+
+func (req *FunctionRequest) GetBody() []byte {
+	return req.body
+}
+
+func (req *FunctionRequest) GetQueryString() string {
+	return req.queryString
+}
+
+func (req *FunctionRequest) GetMethod() string {
+	return req.method
+}
+
+func (req *FunctionRequest) GetHost() string {
+	return req.host
+}
+
 // Context is set for optional cancellation inflight requests.
-func (r *Request) Context() context.Context {
-	return r.ctx
+func (req *FunctionRequest) GetContext() context.Context {
+	return req.ctx
 }
 
 // WithContext overides the context for the Request struct
-func (r *Request) WithContext(ctx context.Context) {
+func (req *FunctionRequest) WithContext(ctx context.Context) {
 	// AE: Not keen on panic mid-flow in user-code, however stdlib also appears to do
 	// this. https://golang.org/src/net/http/request.go
 	// This is not setting a precedent for broader use of "panic" to handle errors.
 	if ctx == nil {
 		panic("nil context")
 	}
-	r.ctx = ctx
+	req.ctx = ctx
 }
 
 // FunctionHandler used for a serverless Go method invocation
 type FunctionHandler interface {
-	Handle(req Request) (Response, error)
+	Handle(req FunctionRequest) (FunctionResponse, error)
 }
 
 func init() {

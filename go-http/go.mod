@@ -1,3 +1,3 @@
 module github.com/openfaas/templates-sdk/go-http
 
-go 1.16
+go 1.17
