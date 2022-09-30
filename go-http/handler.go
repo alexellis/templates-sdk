@@ -48,15 +48,15 @@ func NewFunctionResponse(body []byte, statusCode int, header http.Header) *Funct
 	}
 }
 
-func (r *FunctionResponse) GetHeader() http.Header {
+func (r FunctionResponse) GetHeader() http.Header {
 	return r.Header
 }
 
-func (r *FunctionResponse) GetBody() []byte {
+func (r FunctionResponse) GetBody() []byte {
 	return r.Body
 }
 
-func (r *FunctionResponse) GetStatusCode() int {
+func (r FunctionResponse) GetStatusCode() int {
 	return r.StatusCode
 }
 
