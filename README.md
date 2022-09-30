@@ -1,2 +1,3 @@
-# template-sdks
-SDK resources for templates such as models and entrypoints
+# go-http
+
+An SDK for building OpenFaaS functions in Go
